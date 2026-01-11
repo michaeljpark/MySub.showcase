@@ -1,0 +1,231 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Header */
+header {
+    padding: 80px 120px 60px;
+    text-align: left;
+}
+
+.main-logo {
+    width: auto;
+    height: 80px; 
+    margin-bottom: 40px;
+    display: block;
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.info-left {
+    text-align: left;
+}
+
+.info-right {
+    text-align: right;
+}
+
+.header-info p {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: #666666;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Showcase Layout */
+.showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 0 120px 80px;
+}
+
+.showcase-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.showcase-item {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Reduced gap to bring text closer to image */
+}
+
+/* Optional: Specifically margin-top for sub-heading following an image if gap isn't enough */
+.image-container + .sub-heading {
+    margin-top: 10px;
+}
+
+.image-container {
+    width: 100%;
+    background: transparent;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.showcase-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.sub-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 400; /* Made normal weight as requested */
+    color: #333333;
+    letter-spacing: -2px; /* Reduced specific spacing */
+    text-transform: none; /* Changed from uppercase to standard sentence/title case styling */
+}
+
+.ixec-title {
+    /* font-family: 'Poppins', sans-serif; handled by body or sub-heading */
+    letter-spacing: 0;
+}
+
+.body {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: #666666;
+    line-height: 1.8;
+    max-width: 800px;
+}
+
+/* Scroll-based slideshow */
+.scroll-slideshow {
+    height: 500vh; /* Adjusted for amount of images */
+    position: relative;
+    margin-bottom: 80px;
+}
+
+.scroll-slideshow-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 120px;
+}
+
+.scroll-slideshow-container {
+    width: 100%;
+    max-width: 1600px;
+    position: relative;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scroll-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.scroll-slide.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.showcase-continued {
+    padding-top: 80px;
+}
+
+/* Footer */
+footer {
+    padding: 60px 120px;
+    text-align: center;
+}
+
+footer p {
+    font-size: 0.95rem;
+    color: #666666;
+    font-weight: 300;
+}
+
+/* Iframe Section */
+.iframe-container {
+    width: 100%;
+}
+
+.iframe-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* border: 2px solid #cccccc; Removed */
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(60px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.showcase-item,
+.showcase-row {
+    opacity: 0;
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.image-container { opacity: 0; animation: fadeInUp 0.4s ease-out forwards; }
+.sub-heading, .body { opacity: 0; animation: fadeInUp 0.3s ease-out forwards; }
+
+.showcase-item:nth-child(1) { animation-delay: 0.1s; }
+.showcase-item:nth-child(2) { animation-delay: 0.2s; }
+.showcase-item:nth-child(3) { animation-delay: 0.3s; }
+.showcase-item:nth-child(4) { animation-delay: 0.4s; }
+
+.showcase-item.no-animation {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+    header { padding: 60px 20px; }
+    .main-logo { height: 50px; margin-bottom: 30px; }
+    .header-info { flex-direction: column; gap: 30px; }
+    .info-right { text-align: left; }
+    .showcase { gap: 60px; padding: 0 20px 20px; }
+    .showcase-row { grid-template-columns: 1fr; }
+    .iframe-wrapper { aspect-ratio: 9 / 16; }
+    .scroll-slideshow-sticky { padding: 0 20px; }
+}
