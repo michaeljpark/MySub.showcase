@@ -126,7 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
         research: document.getElementById('research'),
         design: document.getElementById('design'),
         prototyping: document.getElementById('prototyping'),
-        'design-pilot': document.getElementById('design-pilot')
+        'design-pilot': document.getElementById('design-pilot'),
+        'feedback': document.getElementById('feedback'),
+        'future-developments': document.getElementById('future-developments')
     };
 
     function updateNav() {
@@ -138,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sections.design && scrollPosition >= sections.design.offsetTop) current = 'design';
         if (sections.prototyping && scrollPosition >= sections.prototyping.offsetTop) current = 'prototyping';
         if (sections['design-pilot'] && scrollPosition >= sections['design-pilot'].offsetTop) current = 'design-pilot';
+        if (sections['feedback'] && scrollPosition >= sections['feedback'].offsetTop) current = 'feedback';
+        if (sections['future-developments'] && scrollPosition >= sections['future-developments'].offsetTop) current = 'future-developments';
 
         // Update classes
         navItems.forEach(item => {
