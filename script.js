@@ -131,9 +131,51 @@ document.addEventListener('DOMContentLoaded', function() {
         'future-developments': document.getElementById('future-developments')
     };
 
+    const navIndicator = document.querySelector('.nav-indicator');
+    const navList = document.querySelector('.pill-nav-list');
+
+    function updateIndicator(activeItem) {
+        if (!activeItem || !navIndicator) return;
+        
+        // Calculate position relative to the ul container
+        // We need the offsetLeft and width of the active item relative to the navList
+        // Since navList is relative, activeItem.offsetLeft works if they are direct children
+        // The structure is navList > li > a.nav-item. So activeItem is the <a>.
+        // We need the LI's position + padding?, or just the A's position relative to navList?
+        // Actually, navList is flex, LI is flex item. 
+        // Let's get bounding rects to be safe.
+        
+        const listRect = navList.getBoundingClientRect();
+        const itemRect = activeItem.getBoundingClientRect(); // This is the <a> tag usually if we add class to a
+        // Wait, the structure is <li><a class="nav-item"></a></li>. 
+        // The .active class is added to the <a> tag in updateNav logic.
+        // The indicator is inside navList (absolute).
+        
+        // However, the indicator is a sibling of LI elements in my new HTML struct?
+        // No, HTML I wrote: <ul class="pill-nav-list"><div class="nav-indicator"></div><li>...</li></ul>
+        // So indicator is child of UL. LIs are children of UL.
+        // The 'activeItem' passed here is likely the <a> tag inside the <li>.
+        
+        // We want the indicator to cover the <a> tag (pill shape).
+        // Since <a> has padding, we match its size.
+        // The <a> is inside <li>.
+        // offset relative to UL:
+        // left = itemRect.left - listRect.left
+        
+        // But <a> might have margin/padding from LI?
+        // LIs usually have no margin in my CSS, just gap on UL.
+        
+        const offsetLeft = itemRect.left - listRect.left;
+        const width = itemRect.width;
+        
+        navIndicator.style.width = `${width}px`;
+        navIndicator.style.transform = `translateX(${offsetLeft}px)`;
+        navIndicator.style.opacity = '1';
+    }
+
     function updateNav() {
         const scrollPosition = window.scrollY + window.innerHeight * 0.4;
-        let current = ''; // No default active section
+        let current = ''; 
         
         // Find the current section
         if (sections.research && scrollPosition >= sections.research.offsetTop) current = 'research';
@@ -144,34 +186,51 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sections['future-developments'] && scrollPosition >= sections['future-developments'].offsetTop) current = 'future-developments';
 
         // Update classes
+        let activeFound = false;
         navItems.forEach(item => {
             item.classList.remove('active');
             if (item.getAttribute('data-target') === current) {
                 item.classList.add('active');
+                updateIndicator(item);
+                activeFound = true;
             }
         });
+
+        if (!activeFound) {
+            navIndicator.style.opacity = '0';
+        }
     }
 
     window.addEventListener('scroll', updateNav);
-    // Click to scroll
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const targetId = item.getAttribute('data-target');
-            const targetSection = sections[targetId];
-            if (targetSection) {
-                const headerOffset = 100;
-                const elementPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
-            }
-        });
-    });
     
     // Initial call
     updateNav();
+
+    // Modal Logic
+    const reportBtn = document.querySelector('.nav-btn-report');
+    const modal = document.getElementById('reportModal');
+
+    if (reportBtn && modal) {
+        reportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.style.display = 'flex';
+            // Trigger reflow or use timeout to allow transition
+            requestAnimationFrame(() => {
+                modal.classList.add('show');
+            });
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        });
+
+        // Close when clicking outside content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 300); // Wait for transition
+            }
+        });
+    }
 
 });

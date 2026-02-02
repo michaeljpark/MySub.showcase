@@ -70,6 +70,7 @@ header {
     display: flex;
     flex-direction: column;
     gap: 15px; /* Reduced gap to bring text closer to image */
+    scroll-margin-top: 140px; /* Offset for pill nav */
 }
 
 /* Optional: Specifically margin-top for sub-heading following an image if gap isn't enough */
@@ -214,6 +215,29 @@ footer p {
     border: none;
 }
 
+/* Pilot Iframe Section */
+.iframe-container {
+    width: 100%;
+}
+
+.iframe-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #fff;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.iframe-wrapper iframe {
+    width: 111.111%;
+    height: 111.111%;
+    transform: scale(0.9);
+    transform-origin: 0 0;
+    border: none;
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(60px); }
@@ -248,55 +272,236 @@ footer p {
     .showcase-row { grid-template-columns: 1fr; }
     .demo-row { grid-template-columns: 1fr; }
     .demo-iframe-wrapper { aspect-ratio: 9 / 16; }
+    .iframe-wrapper { aspect-ratio: 9 / 16; }
     .scroll-slideshow-sticky { padding: 0 20px; }
 }
 
-/* Side Navigation */
-.side-nav {
+/* Pill Top Navigation */
+.pill-nav-container {
     position: fixed;
-    left: 60px; /* Center of the 120px padding */
-    top: 50%;
-    transform: translate(-50%, -50%); /* Center the navigation block itself */
+    top: 30px;
+    left: 0;
+    right: 0;
     z-index: 1000;
-    width: max-content; /* Shrink to fit content so centering works based on width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 60px; /* Base padding */
+    pointer-events: none; /* Let clicks pass through empty areas */
 }
 
-.nav-list {
+/* Enable pointer events for actual interactive children */
+.pill-nav-list, .nav-btn-report {
+    pointer-events: auto;
+}
+
+.pill-nav-list {
+    position: relative;
     list-style: none;
-    padding: 0;
+    padding: 6px;
     margin: 0;
     display: flex;
-    flex-direction: column;
-    gap: 12px; 
+    align-items: center;
+    gap: 4px;
+    background: transparent; /* No background */
+    /* Remove shadow/border/blur as requested */
+}
+
+.nav-indicator {
+    position: absolute;
+    height: 100%; /* Will match item height if container is sized by items, or we set top/bottom */
+    top: 0;
+    left: 0;
+    background-color: #000;
+    border-radius: 50px;
+    z-index: -1; /* Behind text */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Natural easing */
+    opacity: 0; /* Hidden initially until JS sets it */
 }
 
 .nav-item {
+    display: block;
+    padding: 10px 20px;
     font-family: 'Poppins', sans-serif;
-    font-size: 10px; 
-    font-weight: 600;
-    color: #e0e0e0; 
+    font-size: 11px;
+    font-weight: 500;
+    color: #000; /* Black text */
     text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: block; 
-    text-align: left; /* Keep internal items aligned to the left */
+    text-decoration: none;
     letter-spacing: 0.5px;
+    border-radius: 50px;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    background: transparent; /* Remove individual hover bg */
 }
 
-/* Removed ::before pseudo-element (the dot) */
-
 .nav-item:hover {
-    color: #999;
+    color: #555; /* Slight fade on hover if not active */
 }
 
 .nav-item.active {
-    color: #333;
-    font-weight: 700;
-    /* Removed size increase to prevent layout shift */
+    color: #fff; /* Text white on black pill */
+    background-color: transparent; /* Background handled by indicator */
 }
 
-@media (max-width: 1400px) {
-    .side-nav {
+/* View Report Button - Far Right */
+.nav-btn-report {
+    position: absolute;
+    right: 120px; /* Match typical site padding */
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: #000;
+    background: transparent;
+    padding: 10px 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-btn-report:hover {
+    opacity: 0.7;
+    background-color: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+@media (max-width: 1100px) {
+    .pill-nav-container {
+        top: 20px;
+        padding: 0 20px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        pointer-events: auto; /* Enable scroll */
+    }
+    
+    .pill-nav-list {
+        padding-right: 150px; /* Space for the absolute button if it overlaps, or we move it */
+    }
+
+    .nav-btn-report {
+        right: 20px; 
+    }
+}
+
+@media (max-width: 768px) {
+    .pill-nav-container {
+        /* Enable display */
+        display: flex; 
+        flex-direction: column;
+        align-items: flex-end;
+        
+        /* Reset positioning from desktop/tablet */
+        top: 20px;
+        right: 20px;
+        left: auto;
+        bottom: auto;
+        width: auto;
+        padding: 0;
+        
+        /* Disable scroll behavior */
+        overflow: visible;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .pill-nav-list {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 8px; /* Vertical spacing */
+        padding: 0;
+        margin: 0;
+        width: auto;
+        /* Reset padding-right from 1100px media query */
+        padding-right: 0; 
+    }
+
+    .nav-item {
+        color: #bbbbbb; /* Lighter gray for inactive */
+        font-weight: 500;
+        font-size: 13px; /* Slightly larger for touch targets */
+        padding: 5px 0; /* Compact vertically */
+        text-align: right;
+        background-color: transparent !important; /* Force transparent */
+    }
+    
+    .nav-item:hover {
+        color: #888;
+    }
+
+    .nav-item.active {
+        color: #000; /* Black for active */
+        font-weight: 500; /* No bold, same weight */
+    }
+
+    /* Hide the sliding blob indicator on mobile */
+    .nav-indicator {
         display: none;
+    }
+
+    /* View Report Button - Bottom Left */
+    .nav-btn-report {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        right: auto;
+        top: auto;
+        
+        /* Reset transform/positioning styles */
+        transform: none;
+        margin: 0;
+        padding: 10px 0;
+        
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: underline;
+        color: #000;
+    }
+}
+
+/* Report Modal */
+.report-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 2000; /* Above everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity backdrop */
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-modal.show {
+    opacity: 1;
+}
+
+.report-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    display: flex; /* Removes gap at bottom of image */
+}
+
+.report-modal-content img {
+    width: 100%;
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+    display: block;
+}
     }
 }

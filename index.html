@@ -12,16 +12,26 @@
 </head>
 <body>
 
-    <nav class="side-nav">
-        <ul class="nav-list">
-            <li class="nav-item active" data-target="research">Research</li>
-            <li class="nav-item" data-target="design">Design</li>
-            <li class="nav-item" data-target="prototyping">Prototyping</li>
-            <li class="nav-item" data-target="design-pilot">Design Pilot</li>
-            <li class="nav-item" data-target="feedback">Feedback</li>
-            <li class="nav-item" data-target="future-developments">Future<br>Developments</li>
+    <!-- Top Pill Navigation -->
+    <nav class="pill-nav-container">
+        <ul class="pill-nav-list">
+            <div class="nav-indicator"></div>
+            <li><a class="nav-item" data-target="research" href="#research">Research</a></li>
+            <li><a class="nav-item" data-target="design" href="#design">Design</a></li>
+            <li><a class="nav-item" data-target="prototyping" href="#prototyping">Prototyping</a></li>
+            <li><a class="nav-item" data-target="design-pilot" href="#design-pilot">Design Pilot</a></li>
+            <li><a class="nav-item" data-target="feedback" href="#feedback">Feedback</a></li>
+            <li><a class="nav-item" data-target="future-developments" href="#future-developments">Future Developments</a></li>
         </ul>
+        <a class="nav-btn-report" href="#">View Report</a>
     </nav>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="report-modal">
+        <div class="report-modal-content">
+            <img src="mysubreport.png" alt="MySub Report">
+        </div>
+    </div>
 
     <header>
         <img src="MySub.svg" alt="MySub Logo" class="main-logo">
